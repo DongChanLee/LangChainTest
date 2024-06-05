@@ -1,0 +1,39 @@
+import os
+
+os.environ['HUGGINGFACEHUB_API_TOKEN'] = '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'
+
+from langchain_community.llms import HuggingFaceEndpoint
+from langchain import LLMChain
+from langchain.prompts import PromptTemplate
+# from langchain.llms import HuggingFaceHub
+
+
+# HuggingFace Repository ID
+# repo_id = 'KT-AI/midm-bitext-S-7B-inst-v1'
+repo_id = 'mistralai/Mistral-7B-v0.1'
+
+
+# 질의내용
+# question = "손흥민이 누구야?"
+question = "Who is Son Heung Min?"
+
+# 템플릿
+template = """Question: {question}
+
+Answer: """
+
+# 프롬프트 템플릿 생성
+prompt = PromptTemplate(template=template, input_variables=["question"])
+
+# HuggingFaceHub 객체 생성
+llm = HuggingFaceEndpoint(
+    repo_id=repo_id,
+    max_length=128,
+    temperature= 0.2
+)
+
+# LLM Chain 객체 생성
+llm_chain = LLMChain(prompt=prompt, llm=llm)
+
+# 실행
+print(llm_chain.run(question=question))
